@@ -31,7 +31,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 logo-ateneu">
-                <img src="{{ asset('imagens/logo-ateneu.png') }}" class="">
+                <!-- <img src="{{ asset('imagens/logo-ateneu.png') }}" class=""> -->
             </div>
         </div>
     </div>

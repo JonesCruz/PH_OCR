@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OcrRequest;
 use Intervention\Image\ImageManagerStatic as Image;
-
+use TesseractOCR;
 class OcrController extends Controller
 {
 
     /** Função responsavel por converter imagem em texto, de acordo com a biblioteca tesseract
      * @param OcrRequest $ocrRequest
      * @return string
-     * @author Dário Santos
+     * @author Jones Bob
      */
     public function convert(OcrRequest $ocrRequest)
     {
@@ -23,19 +23,19 @@ class OcrController extends Controller
         try {
             $imagem         = $ocrRequest->file('imagem');
             $novoNomeImagem = $imagem->store('');;
-            $imagemResize   = Image::make($imagem->getRealPath());
-            //$imagemResize->resize(300, 300);
+            $imagemResize   = Image::make($imagem->getRealPath());            
             $caminhoImagem  = public_path('uploads/' .$novoNomeImagem);
-            $imagemResize->save($caminhoImagem);
-
-            $resultadoConversao = (new \TesseractOCR($caminhoImagem))->run();
+            $imagemResize->save($caminhoImagem);          
+            $tsaInstance = new TesseractOCR($caminhoImagem);            
+            $executablePath = '"C:/Program Files (x86)/Tesseract-OCR/tesseract.exe"';
+            $tsaInstance->executable($executablePath);
+            $recognized = $tsaInstance->run();
         } catch(\Exception $e) {
             $resultadoConversao = $e->getMessage();
         }
 
         #retorna o erro ou o resultado da conversão.
-        return json_encode(['resultado'=>$resultadoConversao]);
+        return json_encode(['resultado'=>$recognized]);
     }
-
 
 }
